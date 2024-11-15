@@ -405,6 +405,7 @@ The program is executed successfully.
 
 -------------------------------------------------
 
+
 # Vigenere Cipher
 Vigenere Cipher using with different key values
 
@@ -425,78 +426,68 @@ Implementation using C or pyhton code
 ### Step 3:
 
 Testing algorithm with different key values. 
+ALGORITHM DESCRIPTION:
+The Vigenere cipher is a method of encrypting alphabetic text by using a series of different Caesar ciphers based on the letters of a keyword. It is a simple form of polyalphabetic substitution.To encrypt, a table of alphabets can be used, termed a Vigenere square, or Vigenere table. It consists of the alphabet written out 26 times in different rows, each alphabet shifted cyclically to the left compared to the previous alphabet, corresponding to the 26 possible Caesar ciphers. At different points in the encryption process, the cipher uses a different alphabet from one of the rows used. The alphabet at each point depends on a repeating keyword.
+
+
 
 ## PROGRAM:
-```
+```c
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
 
-#define MAX_LENGTH 100
+// Function to perform Vigenere encryption
+void vigenereEncrypt(char *text, const char *key) {
+    int textLen = strlen(text);
+    int keyLen = strlen(key);
 
-int main() 
-{
-    char input[MAX_LENGTH];
-    char key[MAX_LENGTH];
-    char result[MAX_LENGTH];
-
-    printf("Enter the text to encrypt: ");
-    fgets(input, MAX_LENGTH, stdin);
-    input[strcspn(input, "\n")] = '\0'; 
-
-    printf("Enter the key: ");
-    fgets(key, MAX_LENGTH, stdin);
-    key[strcspn(key, "\n")] = '\0'; 
-
-    int inputLength = strlen(input);
-    int keyLength = strlen(key);
-
-    for (int i = 0, j = 0; i < inputLength; ++i) 
-    {
-        char currentChar = input[i];
-
-        if (isalpha(currentChar))
-        {
-            int shift = toupper(key[j % keyLength]) - 'A';
-            int base = isupper(currentChar) ? 'A' : 'a';
-
-            result[i] = ((currentChar - base + shift + 26) % 26) + base;
-            ++j;
-        }
-        else
-        {
-            result[i] = currentChar;
+    for (int i = 0; i < textLen; i++) {
+        char c = text[i];
+        if (c >= 'A' && c <= 'Z') {
+            // Encrypt uppercase letters
+            text[i] = ((c - 'A' + key[i % keyLen] - 'A') % 26) + 'A';
+        } else if (c >= 'a' && c <= 'z') {
+            // Encrypt lowercase letters
+            text[i] = ((c - 'a' + key[i % keyLen] - 'A') % 26) + 'a';
         }
     }
+}
 
-    result[inputLength] = '\0';
-    printf("Encrypted text: %s\n", result);
+// Function to perform Vigenere decryption
+void vigenereDecrypt(char *text, const char *key) {
+    int textLen = strlen(text);
+    int keyLen = strlen(key);
 
-    for (int i = 0, j = 0; i < inputLength; ++i) 
-    {
-        char currentChar = result[i];
-
-        if (isalpha(currentChar)) 
-        {
-            int shift = toupper(key[j % keyLength]) - 'A';
-            int base = isupper(currentChar) ? 'A' : 'a';
-
-            result[i] = ((currentChar - base - shift + 26) % 26) + base;
-            ++j;
+    for (int i = 0; i < textLen; i++) {
+        char c = text[i];
+        if (c >= 'A' && c <= 'Z') {
+            // Decrypt uppercase letters
+            text[i] = ((c - 'A' - (key[i % keyLen] - 'A') + 26) % 26) + 'A';
+        } else if (c >= 'a' && c <= 'z') {
+            // Decrypt lowercase letters
+            text[i] = ((c - 'a' - (key[i % keyLen] - 'A') + 26) % 26) + 'a';
         }
     }
+}
 
-    result[inputLength] = '\0';
-    printf("Decrypted text: %s\n", result);
+int main() {
+    const char *key = "KEY";  // Replace with your desired key
+    char message[] = "This is a secret message.";  // Replace with your message
+
+    // Encrypt the message
+    vigenereEncrypt(message, key);
+    printf("Encrypted Message: %s\n", message);
+
+    // Decrypt the message back to the original
+    vigenereDecrypt(message, key);
+    printf("Decrypted Message: %s\n", message);
 
     return 0;
 }
 ```
-
 ## OUTPUT:
-![WhatsApp Image 2024-10-21 at 09 36 57_1182ad86](https://github.com/user-attachments/assets/7b959294-c95b-4ce9-b4a8-5289e076ab23)
 
-
+![Screenshot 2024-08-30 141616](https://github.com/user-attachments/assets/3341b0e9-615d-4168-b196-6737df4809fc)
 
 ## RESULT:
 The program is executed successfully
@@ -523,68 +514,66 @@ Implementation using C or pyhton code
 ### Step 3:
 
 Testing algorithm with different key values. 
+ALGORITHM DESCRIPTION:
+In the rail fence cipher, the plaintext is written downwards and diagonally on successive "rails" of an imaginary fence, then moving up when we reach the bottom rail. When we reach the top rail, the message is written downwards again until the whole plaintext is written out. The message is then read off in rows.
 
 ## PROGRAM:
-```
-
+```c
 #include<stdio.h>
-#include<conio.h>
 #include<string.h>
-
+#include<stdlib.h>
 int main()
 {
-    int i, j, k, l;
-    char a[20], c[20], d[20];
-
-    printf("\n\t\t RAIL FENCE TECHNIQUE");
-    printf("\n\nEnter the input string : ");
-    gets(a);
-    l = strlen(a);
-
-    for(i = 0, j = 0; i < l; i++)
-    {
-        if(i % 2 == 0)
-            c[j++] = a[i];
-    }
-    for(i = 0; i < l; i++)
-    {
-        if(i % 2 == 1)
-            c[j++] = a[i];
-    }
-    c[j] = '\0';
-
-    printf("\nCipher text after applying rail fence :");
-    printf("%s", c);
-
-    if(l % 2 == 0)
-        k = l / 2;
-    else
-        k = (l / 2) + 1;
-
-    for(i = 0, j = 0; i < k; i++)
-    {
-        d[j] = c[i];
-        j = j + 2;
-    }
-    for(i = k, j = 1; i < l; i++)
-    {
-        d[j] = c[i];
-        j = j + 2;
-    }
-    d[l] = '\0';
-
-    printf("\nText after decryption : ");
-    printf("%s", d);
-
-    return 0;
+int i,j,len,rails,count,code[100][1000];
+ char str[1000];
+ printf("Enter a Secret Message\n");
+ gets(str);
+ len=strlen(str);
+printf("Enter number of rails\n");
+scanf("%d",&rails);
+for(i=0;i<rails;i++)
+{
+ for(j=0;j<len;j++)
+ {
+ code[i][j]=0;
+ }
+}
+count=0;
+j=0;
+while(j<len)
+{
+if(count%2==0)
+{
+for(i=0;i<rails;i++)
+{
+ //strcpy(code[i][j],str[j]);
+ code[i][j]=(int)str[j]; 
+ j++;
+}
+}
+else
+{
+for(i=rails-2;i>0;i--)
+{
+ code[i][j]=(int)str[j];
+j++;
+} 
+} 
+count++;
+}
+for(i=0;i<rails;i++)
+{
+for(j=0;j<len;j++)
+{
+ if(code[i][j]!=0)
+ printf("%c",code[i][j]);
+}
+}
+printf("\n");
 }
 ```
-
 ## OUTPUT:
-![WhatsApp Image 2024-10-21 at 09 47 51_cfb89f2d](https://github.com/user-attachments/assets/7309a740-7996-4f3c-b744-989347a6dfab)
-
-
-
+![Screenshot 2024-08-30 142425](https://github.com/user-attachments/assets/07316782-db81-49d6-914a-74148ec59c0d)
 
 ## RESULT:
-The program is executed successfully
+The program is executed successfully.
